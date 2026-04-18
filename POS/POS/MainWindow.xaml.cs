@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,14 +21,19 @@ namespace POS
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnDashboard_Click(object sender, RoutedEventArgs e)
         {
-
+            DashboardContent.Visibility = Visibility.Visible;
+            DynamicContent.Visibility = Visibility.Collapsed;
+            DynamicContent.Content = null; // Giải phóng bộ nhớ
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void btnInventory_Click(object sender, RoutedEventArgs e)
         {
-
+            DashboardContent.Visibility = Visibility.Collapsed;
+            // Gọi màn hình Kho
+            DynamicContent.Content = new POS.Views.InventoryView();
+            DynamicContent.Visibility = Visibility.Visible;
         }
     }
 }

@@ -23,16 +23,10 @@
                 <TextBlock Text="SmartPOS" Foreground="#FF89B4FA" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,40"/>
 
                 <!-- Menu Buttons -->
-                <Button Content="🏠 Tổng Quan" Height="50" Background="#FF313244" Foreground="White" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
-                <Button Content="🛒 Bán Hàng (F12)" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
-                <Button Content="📦 Quản Lý Kho" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
-                <Button Content="⚙️ Cài Đặt" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
-                <!--<Button Height="50" Background="Transparent" BorderThickness="0" Padding="20,0,0,0" Click="Button_Click_1" Cursor="Hand">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="150">
-                        <Image Source="/Image/setting.png" Width="147" Height="30" Margin="0,0,15,0" Stretch="Uniform"/>
-                    </StackPanel>
-                </Button>-->
-
+                <Button x:Name="btnDashboard" Content="🏠 Tổng Quan" Height="50" Background="#FF313244" Foreground="White" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5" Click="btnDashboard_Click"/>
+                <Button x:Name="btnSale" Content="🛒 Bán Hàng (F12)" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
+                <Button x:Name="btnInventory" Content="📦 Quản Lý Kho" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5" Click="btnInventory_Click"/>
+                <Button x:Name="btnSettings" Content="⚙️ Cài Đặt" Height="50" Background="Transparent" Foreground="#FFA6ADC8" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0" Margin="10,5"/>
             </StackPanel>
         </Border>
 
@@ -58,7 +52,7 @@
             </Border>
 
             <!-- DASHBOARD CONTENT -->
-            <Grid Grid.Row="1" Margin="30">
+            <Grid x:Name="DashboardContent" Grid.Row="1" Margin="30">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -98,6 +92,9 @@
                     </Border>
                 </UniformGrid>
             </Grid>
+            
+            <!-- Vùng chứa màn hình động -->
+            <ContentControl x:Name="DynamicContent" Grid.Row="1" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </Window>
