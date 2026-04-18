@@ -6,7 +6,8 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        FontFamily="Segoe UI">
+        FontFamily="Segoe UI"
+        KeyDown="Window_KeyDown">
     <Border CornerRadius="12" Background="#FF1E1E2E" BorderBrush="#FF313244" BorderThickness="1">
         <StackPanel Margin="30" VerticalAlignment="Center">
             

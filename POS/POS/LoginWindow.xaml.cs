@@ -64,6 +64,20 @@ namespace POS
             Application.Current.Shutdown();
         }
 
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.F5)
+            {
+                MessageBox.Show(
+                    "SMART POS - Enterprise Edition\n" +
+                    "Version 1.0.0 (Alpha Build)\n\n" +
+                    "Phát triển bởi: Chuyên gia hệ thống Antigravity\n" +
+                    "Hỗ trợ tính năng: \n- Bảo mật 2 lớp (SHA-256)\n- Quản lý kho Atomic Transaction\n- Chống lỗi trôi hóa đơn", 
+                    "Giới thiệu Phần mềm", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
+            }
+        }
     
     }
 }
