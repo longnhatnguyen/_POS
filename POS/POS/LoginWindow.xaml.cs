@@ -5,7 +5,7 @@ using POS.Core.Security;
 
 namespace POS
 {
-    public partial class LoginWindow : Window
+    public partial class LoginWindow : Wpf.Ui.Controls.FluentWindow
     {
         public LoginWindow()
         {

@@ -4,91 +4,130 @@
              xmlns:vm="clr-namespace:POS.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
-             Background="#FF1E1E2E"
-             FontFamily="Segoe UI"
              d:DataContext="{d:DesignInstance Type=vm:InventoryViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="720" d:DesignWidth="1030">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <!-- LỚP NỀN: DANH SÁCH SẢN PHẨM -->
+        <Grid Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Thanh tiêu đề & Tìm kiếm -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="📦 Quản Lý Kho Vật Tư" Foreground="White" FontSize="28" FontWeight="Bold"/>
+            <!-- Thanh tiêu đề & Tìm kiếm -->
+            <Grid Grid.Row="0" Margin="0,0,0,24">
+                <ui:TextBlock Text="Kho Sản Phẩm &amp; Lịch Sử" FontTypography="TitleLarge" Foreground="{StaticResource Brand.Primary}"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="321,-1,0,1" Width="669">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ui:TextBlock Text="Tra cứu mã vạch:" FontTypography="BodyStrong" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    
+                    <ui:TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Gõ để tìm kiếm..." Icon="{ui:SymbolIcon Search24}" ClearButtonEnabled="True" Width="300" Margin="0,0,24,0"/>
 
-                <TextBlock Text="Tìm kiếm:" Foreground="#FFA6ADC8" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="16"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Width="381" Height="40" Background="#FF313244" Foreground="White" BorderThickness="0" Padding="10,8" FontSize="16"/>
-            </StackPanel>
+                    <ui:Button Content="THÊM SẢN PHẨM" Icon="{ui:SymbolIcon Add24}" Appearance="Primary" Command="{Binding OpenCreateDialogCommand}" Padding="16,8"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Khối Card Bọc DataGrid -->
+            <Border Grid.Row="1" CornerRadius="12" BorderThickness="1" BorderBrush="{StaticResource Bg.Input}" ClipToBounds="True">
+                <ui:DataGrid ItemsSource="{Binding Products}" AutoGenerateColumns="False" 
+                          CanUserAddRows="False" IsReadOnly="True" 
+                          HeadersVisibility="Column" GridLinesVisibility="None" RowHeight="56"
+                          BorderThickness="0">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã SKU" Binding="{Binding SKU}" Width="120" />
+                    <DataGridTextColumn Header="Tên Sản Phẩm" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="Danh Mục" Binding="{Binding Category.Name}" Width="150"/>
+                    <DataGridTextColumn Header="Giá Bán Lẻ" Binding="{Binding BasePrice, StringFormat={}{0:N0} đ}" Width="140"/>
+                    
+                    <DataGridTextColumn Header="Tồn Kho" Binding="{Binding StockQuantity}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="{StaticResource Status.Success}"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Thao Tác -->
+                    <DataGridTemplateColumn Header="Thao Tác Hệ Thống" Width="300">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,16,0">
+                                    <ui:Button Content="Cân kho" Appearance="Transparent" Icon="{ui:SymbolIcon ScanType24}" Foreground="{StaticResource Status.Warning}" Margin="0,0,8,0"
+                                            Command="{Binding DataContext.AdjustStockCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}"/>
+
+                                    <ui:Button Content="Sửa" Appearance="Transparent" Icon="{ui:SymbolIcon Edit24}" Foreground="{StaticResource Brand.Secondary}" Margin="0,0,8,0"
+                                            Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}"/>
+
+                                    <ui:Button Content="Xóa" Appearance="Transparent" Icon="{ui:SymbolIcon Delete24}" Foreground="{StaticResource Status.Error}" 
+                                            Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </ui:DataGrid>
+            </Border>
         </Grid>
-        <Button Content="+ Thêm Sản Phẩm Mới" Command="{Binding CreateProductCommand}" Background="#FF89B4FA" Foreground="#FF11111B" FontSize="14" FontWeight="Bold" BorderThickness="0" Padding="10,0" Cursor="Hand" Margin="784,0,6,20">
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="6"/>
-                </Style>
-            </Button.Resources>
-        </Button>
 
-        <!-- Lưới dữ liệu (DataGrid) -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Products}" AutoGenerateColumns="False" 
-                  CanUserAddRows="False" IsReadOnly="True" 
-                  Background="#FF181825" RowBackground="#FF1E1E2E" AlternatingRowBackground="#FF313244"
-                  Foreground="#FFA6ADC8" RowHeight="50" ColumnHeaderHeight="40"
-                  BorderThickness="0" HeadersVisibility="Column" GridLinesVisibility="None">
+        <!-- LỚP ĐÈN MỜ (OVERLAY MODAL SPA) -->
+        <Border Background="{StaticResource Bg.Overlay}" Visibility="{Binding IsDialogOpen, Converter={StaticResource BoolToVis}}" Panel.ZIndex="100">
+            <!-- Form Nổi lềnh bềnh, Dùng ui:Card để bắt chuẩn bóng đổ win11 -->
+            <ui:Card VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Padding="0" Width="600" Effect="{StaticResource Shadow.Lg}">
+                <StackPanel Margin="40">
+                    <ui:TextBlock Text="{Binding DialogTitle}" FontTypography="TitleLarge" Foreground="{StaticResource Brand.Primary}" Margin="0,0,0,32"/>
 
-            <DataGrid.Resources>
-                <!-- Style cho DataGrid Header -->
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background" Value="#FF11111B"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                    <Setter Property="Padding" Value="10,0"/>
-                    <Setter Property="FontSize" Value="16"/>
-                </Style>
-            </DataGrid.Resources>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="SKU" Binding="{Binding SKU}" Width="100"/>
-                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="150"/>
-                <DataGridTextColumn Header="Tên Sản Phẩm" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="Danh Mục" Binding="{Binding Category.Name}" Width="150"/>
-                <DataGridTextColumn Header="Giá Bán" Binding="{Binding BasePrice, StringFormat=\{0:N0\} đ}" Width="120"/>
+                        <!-- Cột Trái -->
+                        <StackPanel Grid.Column="0">
+                            <ui:TextBlock Text="Mã Phiếu (SKU) *" FontTypography="Caption" Foreground="{StaticResource Text.Muted}" Margin="0,0,0,8"/>
+                            <ui:TextBox Text="{Binding CurrentProduct.SKU, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" PlaceholderText="Nhập mã SKU..."/>
 
-                <!-- CỘT TỒN KHO LÀ BẤT KHẢ XÂM PHẠM -->
-                <DataGridTextColumn Header="Tồn Kho" Binding="{Binding StockQuantity}" Width="100">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="#FFA6E3A1"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                            <ui:TextBlock Text="Mã Vạch Súng Bắn" FontTypography="Caption" Foreground="{StaticResource Text.Muted}" Margin="0,0,0,8"/>
+                            <ui:TextBox Text="{Binding CurrentProduct.Barcode, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" PlaceholderText="Scan mã vạch..."/>
 
-                <!-- Cột hành động Cân Kho -->
-                <DataGridTemplateColumn Header="Nghiệp vụ (Atomic)" Width="200">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="+ Nhập sỉ (10 SP)1" Background="#FFF9E2AF" Foreground="Black" FontWeight="Bold" 
-                                    BorderThickness="0" Margin="5" Cursor="Hand"
-                                    Command="{Binding DataContext.AdjustStockCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                    CommandParameter="{Binding}">
-                                <Button.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="4"/>
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                            <ui:TextBlock Text="Giá Bán Lẻ (VNĐ)" FontTypography="Caption" Foreground="{StaticResource Status.Success}" Margin="0,0,0,8"/>
+                            <ui:TextBox Text="{Binding CurrentProduct.BasePrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" Foreground="{StaticResource Status.Success}" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <!-- Cột Phải -->
+                        <StackPanel Grid.Column="2">
+                            <ui:TextBlock Text="Danh Mục" FontTypography="Caption" Foreground="{StaticResource Text.Muted}" Margin="0,0,0,8"/>
+                            <ComboBox ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding CurrentProduct.CategoryId}" 
+                                      Height="42" Margin="0,0,0,16"/>
+
+                            <ui:TextBlock Text="Tên Tường Minh *" FontTypography="Caption" Foreground="{StaticResource Text.Muted}" Margin="0,0,0,8"/>
+                            <ui:TextBox Text="{Binding CurrentProduct.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" PlaceholderText="Nhập tên sản phẩm..."/>
+
+                            <ui:TextBlock Text="Giá Vốn Nhập Kho" FontTypography="Caption" Foreground="{StaticResource Status.Error}" Margin="0,0,0,8"/>
+                            <ui:TextBox Text="{Binding CurrentProduct.CostPrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" Foreground="{StaticResource Status.Error}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <ui:InfoBar Title="Cảnh Báo Kế Toán" Message="Không thể sửa Tồn Kho trực tiếp. Vui lòng sử dụng Phiếu Kho để điều chỉnh theo đúng quy trình."
+                                IsOpen="True" Severity="Warning" IsClosable="False" Margin="0,16,0,40" />
+
+                    <!-- Buttons Row -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ui:Button Content="HỦY KHÉP LẠI" Appearance="Secondary" Command="{Binding CloseDialogCommand}" Margin="0,0,16,0"/>
+                        <ui:Button Content="ÁP DỤNG DATA" Appearance="Primary" Command="{Binding SaveProductCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+        </Border>
     </Grid>
 </UserControl>

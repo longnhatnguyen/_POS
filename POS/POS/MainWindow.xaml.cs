@@ -14,21 +14,21 @@ namespace POS
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     {
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void btnDashboard_Click(object sender, RoutedEventArgs e)
+        private void navDashboard_Click(object sender, RoutedEventArgs e)
         {
             DashboardContent.Visibility = Visibility.Visible;
             DynamicContent.Visibility = Visibility.Collapsed;
             DynamicContent.Content = null; // Giải phóng bộ nhớ
         }
 
-        private void btnInventory_Click(object sender, RoutedEventArgs e)
+        private void navInventory_Click(object sender, RoutedEventArgs e)
         {
             DashboardContent.Visibility = Visibility.Collapsed;
             // Gọi màn hình Kho

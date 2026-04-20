@@ -9,11 +9,10 @@ namespace POS.Views
         {
             InitializeComponent();
 
-            // Rút dây nguồn DataContext khỏi XAML và đẩy vào Code-Behind.
-            // Điều này ép trình thiết kế XAML của Visual Studio không được chạm tay vào Database.
+            // Móc DataContext từ bộ DI Container của App ra để giải quyết Dependencies
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
-                this.DataContext = new InventoryViewModel();
+                this.DataContext = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<InventoryViewModel>(App.ServiceProvider);
             }
         }
     }

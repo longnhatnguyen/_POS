@@ -1,8 +1,35 @@
 <Application x:Class="POS.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:local="clr-namespace:POS">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <!-- Tích hợp Nhân lõi WPF UI (Fluent Design Windows 11) -->
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- TỪ ĐIỂN MÀU SEMANTIC NỘI BỘ POS -->
+            <SolidColorBrush x:Key="Bg.Base" Color="#FF11111B" /> 
+            <SolidColorBrush x:Key="Bg.Surface" Color="#FF1E1E2E" /> 
+            <SolidColorBrush x:Key="Bg.Input" Color="#FF313244" /> 
+            <SolidColorBrush x:Key="Text.Primary" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="Text.Muted" Color="#FFA6ADC8" />
+            
+            <SolidColorBrush x:Key="Brand.Primary" Color="#FF89B4FA" />
+            <SolidColorBrush x:Key="Brand.Secondary" Color="#FF74C7EC" />
+            <SolidColorBrush x:Key="Status.Success" Color="#FFA6E3A1" />
+            <SolidColorBrush x:Key="Status.Warning" Color="#FFF9E2AF" />
+            <SolidColorBrush x:Key="Status.Error" Color="#FFF38BA8" />
+
+            <!-- Bóng Đổ Phẳng Lặng -->
+            <DropShadowEffect x:Key="Shadow.Md" BlurRadius="20" ShadowDepth="4" Direction="270" Color="Black" Opacity="0.5"/>
+            <DropShadowEffect x:Key="Shadow.Lg" BlurRadius="40" ShadowDepth="8" Direction="270" Color="Black" Opacity="0.7"/>
+            
+            <!-- Áp dụng Phế liệu Xóa nhòe khi Modal mở ra -->
+            <SolidColorBrush x:Key="Bg.Overlay" Color="#C8000000" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -26,5 +26,9 @@ namespace POS.Core.Models
         
         // Ngưỡng báo động hụt kho
         public int LowStockThreshold { get; set; } = 5;
+
+        // Dùng cho Optimistic Concurrency của EF Core
+        [System.ComponentModel.DataAnnotations.Timestamp]
+        public byte[]? RowVersion { get; set; }
     }
 }
